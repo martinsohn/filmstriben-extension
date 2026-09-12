@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <title>Filmstriben undertekster — indstillinger</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      max-width: 540px;
+      margin: 40px auto;
+      padding: 0 20px;
+      font: 14px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    h1 { font-size: 19px; margin: 0 0 4px; }
+    p.lede { margin: 0 0 24px; opacity: .7; }
+    fieldset { border: 1px solid rgba(128,128,128,.35); border-radius: 8px; padding: 16px; margin: 0 0 16px; }
+    legend { padding: 0 6px; font-weight: 600; }
+    label { display: block; margin-bottom: 12px; }
+    label span { display: block; margin-bottom: 4px; opacity: .8; }
+    input[type=text], input[type=password] {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid rgba(128,128,128,.45);
+      border-radius: 6px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      box-sizing: border-box;
+    }
+    .hint { font-size: 12.5px; opacity: .65; margin: -6px 0 12px; }
+    button {
+      padding: 8px 16px;
+      border: 1px solid rgba(128,128,128,.45);
+      border-radius: 6px;
+      background: rgba(128,128,128,.12);
+      color: inherit;
+      font: 600 13px/1 inherit;
+      cursor: pointer;
+    }
+    button:hover { background: rgba(128,128,128,.24); }
+    #status { margin-left: 12px; font-size: 13px; }
+    .ok { color: #17803d; }
+    .warn { color: #b4342b; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <h1>Filmstriben — ekstra undertekster</h1>
+  <p class="lede">Indstillinger for automatisk hentning fra OpenSubtitles.</p>
+
+  <fieldset>
+    <legend>API</legend>
+    <label>
+      <span>API-nøgle (påkrævet)</span>
+      <input id="apiKey" type="password" autocomplete="off" spellcheck="false">
+    </label>
+    <p class="hint">
+      Opret en gratis konto på opensubtitles.com, gå til <em>Consumers</em> under din profil
+      og opret en API-nøgle til en ny applikation.
+    </p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Konto (valgfrit)</legend>
+    <label>
+      <span>Brugernavn</span>
+      <input id="username" type="text" autocomplete="off" spellcheck="false">
+    </label>
+    <label>
+      <span>Adgangskode</span>
+      <input id="password" type="password" autocomplete="off">
+    </label>
+    <p class="hint">
+      Uden login gælder den anonyme kvote på ganske få downloads i døgnet. Med login følger
+      kvoten din konto. Oplysningerne gemmes lokalt i browserens udvidelseslager og sendes
+      kun til api.opensubtitles.com for at hente et token.
+    </p>
+  </fieldset>
+
+  <button id="save" type="button">Gem</button>
+  <button id="test" type="button">Test login</button>
+  <span id="status"></span>
+
+  <script src="options.js"></script>
+</body>
+</html>

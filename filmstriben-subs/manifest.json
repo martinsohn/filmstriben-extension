@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "Filmstriben ekstra undertekster",
+  "description": "Extra subtitles for the Filmstriben player, plus original film titles in the catalogue.",
+  "version": "0.6.1",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://api.opensubtitles.com/*",
+    "https://*.opensubtitles.com/*",
+    "https://*.opensubtitles.org/*"
+  ],
+  "background": {
+    "service_worker": "sw.js"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://streaming.filmstriben.dk/play/*"
+      ],
+      "js": [
+        "bridge.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://streaming.filmstriben.dk/play/*"
+      ],
+      "js": [
+        "player.js"
+      ],
+      "css": [
+        "panel.css"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://fjernleje.filmstriben.dk/*"
+      ],
+      "js": [
+        "catalogue.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://fjernleje.filmstriben.dk/*"
+      ],
+      "js": [
+        "catalogue-net.js"
+      ],
+      "css": [
+        "catalogue.css"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ]
+}

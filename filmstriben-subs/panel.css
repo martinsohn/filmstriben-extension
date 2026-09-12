@@ -1,0 +1,296 @@
+/* ------------------------------------------------------------------ cue layer */
+
+.fs-cues {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 9%;
+  z-index: 2147482000;
+  display: none;
+  padding: 0;
+  text-align: center;
+  white-space: pre-line;
+  pointer-events: none;
+  color: #fff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.3;
+  text-shadow:
+     0  2px 3px rgba(0, 0, 0, .95),
+     0 -2px 3px rgba(0, 0, 0, .95),
+     2px  0 3px rgba(0, 0, 0, .95),
+    -2px  0 3px rgba(0, 0, 0, .95);
+}
+
+.fs-cues.fs-cues-on { display: block; }
+
+/* ---------------------------------------------------------------------- panel */
+
+/*
+ * Anchored bottom-right, clear of the seek bar, and faded out until the player's own
+ * controls appear — player.js mirrors Shaka's `shown` attribute onto .fs-visible.
+ * column-reverse makes the panel open upwards from the button.
+ */
+.fs-subs {
+  position: absolute;
+  right: 12px;
+  bottom: 78px;
+  z-index: 2147483000;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #f4f4f5;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease, visibility .25s ease;
+}
+
+.fs-subs.fs-visible,
+.fs-subs.fs-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fs-subs-toggle {
+  display: block;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 6px;
+  background: rgba(16, 16, 20, .72);
+  color: #f4f4f5;
+  font: 600 12px/1 system-ui, sans-serif;
+  letter-spacing: .04em;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.fs-subs-toggle:hover { background: rgba(16, 16, 20, .94); }
+
+.fs-subs-panel {
+  width: 310px;
+  max-height: 62vh;
+  overflow-y: auto;
+  margin-bottom: 8px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 10px;
+  background: rgba(14, 14, 18, .95);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, .5);
+  backdrop-filter: blur(12px);
+}
+
+/* ----------------------------------------------------------------------- tabs */
+
+.fs-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding: 3px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .07);
+}
+
+.fs-tab {
+  flex: 1;
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: rgba(244, 244, 245, .62);
+  font: 600 12px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.fs-tab-on { background: rgba(255, 255, 255, .16); color: #fff; }
+
+/* ----------------------------------------------------------------- form bits */
+
+.fs-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.fs-row-label { margin-bottom: 10px; }
+
+.fs-lbl {
+  flex: 1;
+  color: rgba(244, 244, 245, .72);
+  white-space: nowrap;
+}
+
+.fs-track-label {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fs-file {
+  display: block;
+  padding: 10px;
+  border: 1px dashed rgba(255, 255, 255, .32);
+  border-radius: 7px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.fs-file:hover { border-color: rgba(255, 255, 255, .62); }
+
+.fs-subs input[type=text],
+.fs-subs input[type=number],
+.fs-subs select {
+  min-width: 0;
+  padding: 5px 7px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, .09);
+  color: #f4f4f5;
+  font: inherit;
+}
+
+/*
+ * The dropdown list is painted by the OS, not the page, so it does not inherit the
+ * translucent control background — it fell back to a white list with white text.
+ * Options need their own opaque colours.
+ */
+.fs-subs select option {
+  background-color: #1b1b21;
+  color: #f4f4f5;
+}
+
+.fs-subs select option:checked {
+  background-color: #2f3340;
+  color: #fff;
+}
+
+.fs-os-query,
+.fs-web-q { flex: 1; }
+.fs-os-year { width: 68px; }
+.fs-os-lang { flex: 1; }
+
+.fs-offset-ctl { display: inline-flex; align-items: center; gap: 3px; }
+.fs-offset { width: 62px; text-align: right; }
+
+.fs-offset-ctl button {
+  min-width: 26px;
+  height: 25px;
+  padding: 0 5px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, .09);
+  color: #f4f4f5;
+  font: 600 11px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.fs-offset-ctl button:hover { background: rgba(255, 255, 255, .22); }
+
+.fs-offset-slider {
+  width: 100%;
+  margin: 0 0 10px;
+  accent-color: #8ab4f8;
+}
+
+.fs-sep {
+  margin: 12px 0;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, .12);
+}
+
+/* -------------------------------------------------------------------- buttons */
+
+.fs-actions { gap: 6px; }
+
+.fs-actions button,
+.fs-os-search {
+  flex: 1;
+  padding: 7px 6px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .1);
+  color: #f4f4f5;
+  font: 600 12px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.fs-os-search { flex: 0 0 70px; }
+
+.fs-actions button:hover,
+.fs-os-search:hover { background: rgba(255, 255, 255, .22); }
+
+.fs-commit { background: rgba(138, 180, 248, .24); border-color: rgba(138, 180, 248, .5); }
+.fs-commit:hover { background: rgba(138, 180, 248, .4); }
+
+/* -------------------------------------------------------------------- results */
+
+.fs-os-results { max-height: 240px; overflow-y: auto; margin-top: 4px; }
+
+.fs-result {
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .05);
+  color: #f4f4f5;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.fs-result:hover { background: rgba(255, 255, 255, .14); }
+.fs-result:disabled { opacity: .5; }
+
+.fs-result-name {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fs-result-meta {
+  display: block;
+  margin-top: 2px;
+  color: rgba(244, 244, 245, .58);
+  font-size: 11px;
+}
+
+.fs-empty { padding: 10px; color: rgba(244, 244, 245, .55); text-align: center; }
+
+/* --------------------------------------------------------------------- status */
+
+.fs-hint {
+  margin-top: 8px;
+  color: rgba(244, 244, 245, .45);
+  font-size: 11px;
+}
+
+.fs-hint kbd {
+  padding: 1px 4px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .09);
+  font: inherit;
+  font-size: 10.5px;
+}
+
+.fs-status {
+  min-height: 1.5em;
+  margin-top: 10px;
+  color: rgba(244, 244, 245, .62);
+  font-size: 11.5px;
+  word-break: break-word;
+}
+
+.fs-status-ok { color: #86efac; }
+.fs-status-warn { color: #fca5a5; }

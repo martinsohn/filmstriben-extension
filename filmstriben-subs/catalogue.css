@@ -1,0 +1,27 @@
+/*
+ * Original title, shown as a small faded line under the Danish title the site displays.
+ *
+ * It is appended *inside* the heading element, so it inherits the heading's colour and font
+ * family and stays glued to it through the site's own layout. Only size, weight and opacity
+ * are changed — no colour is set, so this works on both the dark cards and any light surface.
+ */
+
+.fs-orig-title {
+  display: block;
+  margin-top: .18em;
+  font-size: .78em;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.25;
+  letter-spacing: .01em;
+  opacity: .6;
+  text-transform: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Headings sometimes clamp to one line; the subtitle should not inherit that. */
+.fs-orig-title {
+  white-space: normal;
+  -webkit-line-clamp: none;
+}
