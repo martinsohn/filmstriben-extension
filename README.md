@@ -436,7 +436,5 @@ Most likely causes, in order:
 
 ## Licence
 
-No licence file yet — add one before publishing if you want others to reuse this.
-
 Not affiliated with, endorsed by, or supported by DBC, Filmstriben, Norgesfilm or
 OpenSubtitles. Names are used only to describe what the extension interoperates with.
