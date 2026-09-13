@@ -1,70 +1,51 @@
 # Filmstriben Subtitle Tools
 
 A Manifest V3 browser extension for [Filmstriben Fjernleje](https://fjernleje.filmstriben.dk/),
-the Danish public-library film rental service. It adds subtitle languages the service does not
+the Danish public-library film rental service. It adds support for custom subtitles so you can add languages the service does not
 offer, and shows each film's original title in the catalogue.
 
-Runs on Chromium browsers — Chrome, Edge, Brave, Vivaldi, Opera. Danish UI, because the site
-is Danish. See [Browser support](#browser-support) for why Firefox and Safari are not included.
+Runs on Chromium browsers — Chrome, Edge, Brave, Vivaldi, Opera.
 
-### It may also work on the sibling services
-
-The player is not Filmstriben's own. It is built by **Norgesfilm AS**, who run the same stack
-for several other public-library film services:
-
-| Service | Country | Operator |
-|---|---|---|
-| [fjernleje.filmstriben.dk](https://fjernleje.filmstriben.dk/) | 🇩🇰 | DBC — **the one this is developed against** |
-| [biblioteket.filmstriben.dk](https://biblioteket.filmstriben.dk/) | 🇩🇰 | DBC — the on-site library portal |
-| [filmoteket.no](https://filmoteket.no/) | 🇳🇴 | Norgesfilm |
-| [filmbib.no](https://filmbib.no/) | 🇳🇴 | Norgesfilm |
-
-The player integration depends on nothing Danish — only on Shaka Player being exposed as
-`window.shakaplayer` by Norgesfilm's `shaz.std.js` wrapper, and on subtitles being served as
-plain WebVTT. Both are properties of the shared platform, so the subtitle half has a good
-chance of working on any of the above.
-
-**This is untested on all of them.** Getting there means adding the relevant hosts to the
-`matches` patterns in `manifest.json` and checking `window.shakaplayer` exists in the player
-frame. The catalogue half — original titles — is tied to Filmstriben's GraphQL schema and
-would need separate work. See [Porting to a sibling service](#porting-to-a-sibling-service).
-
-> **Scope.** Subtitles on this platform are unencrypted WebVTT served over CORS-open HTTPS,
-> entirely separate from the Widevine/PlayReady path. This extension only ever reads and adds
+> **Notice.** This extension only ever reads and adds
 > *text tracks*. It does not touch the CDM, the licence request, or the media segments, and it
 > contains nothing that would help you do so. It is for adding subtitles to films you have
-> legitimately borrowed with your own library card.
+> legitimately borrowed from the library. Subtitles on the platform are unencrypted WebVTT served over CORS-open HTTPS,
+> entirely separate from the Widevine/PlayReady path. 
+> 
+> Not affiliated with, endorsed by, or supported by DBC, Filmstriben, Norgesfilm or
+> OpenSubtitles. Names are used only to describe what the extension interoperates with.
 
----
+## Features / Usage
 
-## Features
+### Player - Custom Subtitles
 
-**In the player**
+Add custom subtitles to any movie.
 
-- Load a local `.srt`, `.vtt`, `.ass` or `.ssa` file and render it over the video.
-- Search and download subtitles from the OpenSubtitles REST API, using your own API key.
-- Open an opensubtitles.com web search for the current film. The search text is shown in an
-  editable field, pre-filled with the original title and year, so a bad or missing record is
-  visible and correctable rather than producing a silently wrong search.
-- Live timing adjustment: an offset slider, nudge buttons and `[` / `]` shortcuts, plus
-  frame-rate conversion presets (23.976 ↔ 25 fps and friends). Changes apply on the next frame.
-- Push the tuned track into the player's own subtitle menu, after which further timing changes
-  re-send automatically.
+1. **CC+ button** — bottom-right above the seek bar, fading in and out with the player's own controls.
+2. **Open an OpenSubtitles.com web search** — pre-filled with `<year> - <original title>`, in an editable field so you can correct it first.
+3. **Load a subtitle file** — `.srt`, `.vtt`, `.ass`, `.ssa`. Encoding is sniffed (UTF-8, falling back to Windows-1252) so Latin-1 Nordic files don't come out as mojibake.
+4. **Send to the player** — bakes the timing into a real Shaka track so it appears in the native subtitle menu and works when casting. Later timing changes re-send automatically.
+5. **Added to native subtitle menu** - subtitle is loaded by the player's native menu and selected automatically.
+6. **Subtitles in action** - subtitles shown in the player.
+7. **Live timing adjustment** — slider, ±0.1 s / ±1 s nudges, `[` and `]` shortcuts, plus frame-rate presets (23.976 ↔ 25 fps) for subtitles that drift. Changes apply on the next frame.
+8. **Auto fetch subtitle from OpenSubtitles (untested)** — Auto searches for subs. Select a results for one click download and loading. Requires OpenSubtitles API key, see [OpenSubtitles API setup](#opensubtitles-api-setup)
 
-**In the catalogue**
+![](feature-subtitle.png)
 
-- Each film's original title is shown as a small faded line under the Danish title.
+### Film Catalogue - Original Titles
 
----
+Original titles are shown as a small faded line under the translated title, on cards and page headings. May not be supported on sibling services e.g. filmoteket.no.
+
+![](feature-original-title.png)
 
 ## Install
 
-Not on any extension store. Load it unpacked. The steps are identical in every supported
+The extension is not on any extension store. You must load it unpacked/unzipped. The steps are identical in every supported
 browser; only the address of the extensions page differs.
 
-1. Clone or download this repository. Put it somewhere permanent — the browser reads these
-   files at every start, so it will break if you leave it in Downloads and clear it later.
-2. Open your browser's extensions page and enable **Developer mode**:
+0. Clone or download this repository. Put it somewhere permanent e.g. Documents — the browser reads these
+   files at every start, so it will break if you leave it in Downloads and delete the folder later.
+1. Open your browser's extensions page:
 
    | Browser | Address | Developer mode toggle |
    |---|---|---|
@@ -73,14 +54,11 @@ browser; only the address of the extensions page differs.
    | Brave | `brave://extensions` | top-right |
    | Vivaldi | `vivaldi://extensions` | top-right |
    | Opera | `opera://extensions` | top-right |
+2. Enable **Developer mode**:
+3. Click **Load unpacked**
+4. Select the `filmstriben-extension-unpacked` folder which contains `manifest.json`. If the browser says it cannot find a manifest, you picked the wrong folder.
 
-3. Click **Load unpacked** and select the folder containing `manifest.json` — the folder
-   itself, not its parent. If the browser says it cannot find a manifest, you picked one
-   level too high.
-4. Open a film and press play. The extension adds a **CC+** button to the bottom-right of the
-   player, which appears with the player's own controls.
-
-There is no toolbar icon; the UI lives inside the player.
+![](install-guide-edge.png)
 
 ### Per-browser notes
 
@@ -93,7 +71,31 @@ There is no toolbar icon; the UI lives inside the player.
 - Developer-mode extensions live in one browser profile, and some browsers re-prompt about
   them on restart. Choose *Keep* — dismissing the other way disables the extension.
 
-### OpenSubtitles setup (optional)
+
+### Sibling services
+
+The Filmstriben player is built by **Norgesfilm AS**, who run the same stack
+for public-library film services:
+
+| Service | Country | Operator |
+|---|---|---|
+| [fjernleje.filmstriben.dk](https://fjernleje.filmstriben.dk/) | 🇩🇰 | DBC — **the one this is developed against** |
+| [biblioteket.filmstriben.dk](https://biblioteket.filmstriben.dk/) | 🇩🇰 | DBC — the on-site library portal |
+| [filmoteket.no](https://filmoteket.no/) | 🇳🇴 | Norgesfilm |
+| [filmbib.no](https://filmbib.no/) | 🇳🇴 | Norgesfilm |
+
+The subtitle feature has a good chance of working on any of the above, as the player integration depends on the shared
+Shaka Player being exposed as `window.shakaplayer` by Norgesfilm's `shaz.std.js` wrapper, and on subtitles being served as
+plain WebVTT. Both are properties of the shared platform, so 
+
+**Untested:** Getting there means adding the relevant hosts to the
+`matches` patterns in `manifest.json` and checking `window.shakaplayer` exists in the player
+frame. The catalogue half — original titles — is tied to Filmstriben's GraphQL schema and
+would need separate work. See [Porting to a sibling service](#porting-to-a-sibling-service).
+
+---
+
+### OpenSubtitles API setup
 
 Only needed for in-player search and download; everything else works without it.
 
@@ -127,7 +129,7 @@ Version data from [MDN browser-compat-data](https://github.com/mdn/browser-compa
 
 ### Firefox
 
-Closer than you would think, but not a drop-in. Firefox 128 *does* support `world: "MAIN"`, so
+Support is close, but not a drop-in. Firefox 128 *does* support `world: "MAIN"`, so
 the hard part is already solved. What blocks it is the background script: Firefox has never
 implemented `background.service_worker` and uses non-persistent `background.scripts` instead.
 
@@ -140,7 +142,7 @@ Porting it would mean, at minimum:
 - Handling Firefox MV3 host permissions, which are user-granted at runtime rather than
   granted on install — so the OpenSubtitles calls can be refused until the user opts in.
 
-Untested. If you do it, please send a patch.
+Untested. If you do it, please open a PR.
 
 ### Safari
 
@@ -153,7 +155,7 @@ developer account. Out of scope here, but not impossible.
 
 ## Porting to a sibling service
 
-The subtitle half of this extension is not really Filmstriben-specific — it is
+The subtitle feature is not really Filmstriben-specific — it is
 Norgesfilm-specific, and Norgesfilm runs several services. To try it against one:
 
 1. **Find the player host.** Play something and watch the network panel for a request to
@@ -319,14 +321,9 @@ OpenSubtitles download.
 
 ## Gotchas worth knowing before you change things
 
-- **Shaka 5 cannot remove a text track.** There is no public removal API, so every re-send
-  leaves a stale entry in the native subtitle menu. The removal call is feature-detected so it
-  will start working if that lands upstream. A cleaner fix would be registering a custom URI
-  scheme with Shaka's networking engine that serves the current re-timed VTT on demand — if
-  deselect-then-reselect forces a refetch, one menu entry could serve forever. Untested.
 - **Subtitle files are untrusted input.** Tags are stripped and cues are written with
   `textContent`, never `innerHTML`. Keep it that way.
-- **Encoding.** Nordic subtitle files are routinely Windows-1252, not UTF-8. Everything
+- **Encoding.** Nordic subtitle files are often Windows-1252, not UTF-8. Everything
   decodes with `TextDecoder('utf-8', {fatal: true})` first and falls back on throw.
 - **`User-Agent` cannot be set from `fetch`** in a service worker; Chrome forbids it. If
   OpenSubtitles ever rejects calls for that reason, a `declarativeNetRequest` header rule is
@@ -352,21 +349,6 @@ OpenSubtitles download.
 - **OpenSubtitles indexes by original title.** Always prefer `originalTitle`; the Danish
   release title rarely matches anything in their database.
 - **Two typos are upstream**, not yours: `fetchGlobalNotificaiton` and `GetUserRecommenedMovies`.
-
-### Things tried that did not work
-
-- **A point-cost badge on catalogue cards**, showing `fields.points` and turning red when the
-  balance in `GetCommonUserInformation` was too low. The DOM injection worked against captured
-  markup in tests but never appeared on the live site, and the approach was abandoned rather
-  than debugged further. If you retry it: the row is `div.filmstriben-badge-group`, each pill is
-  a `span.filmstriben-tag` (or an `<a>` for genre/year links), and the pill's text sits in a
-  *nested* `<span>`, one level deeper than you would expect. The likely failure is that the
-  price data was never indexed at all — worth logging whether `GetContent` responses actually
-  reach the `fetch` patch before touching the DOM code.
-- **Automatic subtitle alignment** against the correctly-timed Danish VTT the CDN already
-  serves, by histogramming pairwise differences of cue start times across candidate frame-rate
-  factors. This worked well in testing — exact recovery of offset and rate, with a wrong-film
-  guard — but was removed as unwanted complexity. It lives in the git history if you want it.
 
 ---
 
@@ -420,21 +402,3 @@ Most likely causes, in order:
    rather than by operation name, specifically so renames and batching do not break it — but
    field names inside `fields` are still assumed.
 
----
-
-## Ideas not implemented
-
-- Remember the timing offset per film, keyed off the asset id, and apply it on load.
-- Match OpenSubtitles by IMDb id rather than title — fuzzy title search is poor for Danish
-  releases and alternate titles. Check whether the GraphQL `movie` type exposes an external id.
-- Persist the last-used subtitle language instead of defaulting to English each time.
-- Read back `updateplayprogress` to offer resume-where-you-stopped.
-- Drag-and-drop a subtitle file onto the video.
-- Cue styling controls (size, position, background) for the local renderer.
-
----
-
-## Licence
-
-Not affiliated with, endorsed by, or supported by DBC, Filmstriben, Norgesfilm or
-OpenSubtitles. Names are used only to describe what the extension interoperates with.
