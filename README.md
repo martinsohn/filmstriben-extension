@@ -1,4 +1,4 @@
-# Filmstriben Subtitle Tools
+# Filmstriben Browser Extension - Custom Subtitles and Original Titles // Brugerdefinerede Undertekster og Originale Titler
 
 A Manifest V3 browser extension for [Filmstriben Fjernleje](https://fjernleje.filmstriben.dk/),
 the Danish public-library film rental service. It adds support for custom subtitles so you can add languages the service does not
